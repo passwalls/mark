@@ -1,0 +1,19 @@
+{
+  "name": "mark/mark",
+  "type": "library",
+  "license": "MIT",
+  "description": "a PHP micro framework based on workerman",
+  "require": {
+    "php": ">=7.0",
+    "workerman/workerman": "^4.0.4",
+    "nikic/fast-route": "^1.3"
+  },
+  "suggest": {
+    "ext-event": "For better performance. "
+  },
+  "autoload": {
+    "psr-4": {
+      "Mark\\": "./src"
+    }
+  }
+}
