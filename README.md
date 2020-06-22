@@ -11,14 +11,20 @@ use Mark\App;
 require 'vendor/autoload.php';
 
 $api = new App('http://0.0.0.0:3000');
-$api->get('/', function ($requst) {
-    return '';
+
+$api->any('/', function ($requst) {
+    return 'hello world';
 });
-$api->get('/user', function ($requst) {
-    return '';
+
+$api->get('/hello/{name}', function ($requst, $name) {
+    return "hello $name";
 });
-$api->get('/user/{id}', function ($requst, $id) {
-    return $id;
+
+$api->post('/user/create', function ($requst) {
+    return json_encode(['code'=>0 ,'message' => 'ok']);
 });
+
 $api->start();
 ```
+# License
+The Mark Framework is licensed under the MIT license. See License File for more information.
