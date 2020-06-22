@@ -15,6 +15,8 @@ require 'vendor/autoload.php';
 
 $api = new App('http://0.0.0.0:3000');
 
+$api->count = 4; // process count
+
 $api->any('/', function ($requst) {
     return 'hello world';
 });
