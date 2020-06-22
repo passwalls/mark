@@ -1,6 +1,8 @@
 Mark is a high performance micro framework based on [workerman](https://github.com/walkor/workerman) helps you quickly write APIs with php.
 
 # Install
+It's recommended that you use Composer to install Mark.
+
 `composer require mark/mark`
 
 # Usage
