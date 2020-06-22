@@ -1,10 +1,10 @@
 {
-  "name": "mark/mark",
+  "name": "mark-php/mark",
   "type": "library",
   "license": "MIT",
   "description": "a PHP micro framework based on workerman",
   "require": {
-    "php": ">=7.0",
+    "php": ">=7.1",
     "workerman/workerman": "^4.0.4",
     "nikic/fast-route": "^1.3"
   },
