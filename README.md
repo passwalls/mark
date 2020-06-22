@@ -6,6 +6,7 @@ It's recommended that you use Composer to install Mark.
 `composer require mark/mark`
 
 # Usage
+start.php
 ```php
 <?php
 use Mark\App;
@@ -28,5 +29,18 @@ $api->post('/user/create', function ($requst) {
 
 $api->start();
 ```
+
+Run command `php start.php start -d` 
+
+Going to http://localhost:3000/hello/world will now display "Hello world".
+
+# Available commands
+```
+php start.php restart -d
+php start.php stop
+php start.php status
+php start.php connections
+```
+
 # License
 The Mark Framework is licensed under the MIT license. See License File for more information.
