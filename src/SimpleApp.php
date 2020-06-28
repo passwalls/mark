@@ -69,7 +69,7 @@ class SimpleApp extends Worker
                }
            }
         });
-        $this->count = 12;
+        $this->count = 24;
         \Workerman\Worker::runAll();
     }
 
