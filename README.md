@@ -3,7 +3,7 @@ Mark is a high performance micro framework based on [workerman](https://github.c
 # Install
 It's recommended that you use Composer to install Mark.
 
-`composer require mark/mark`
+`composer require mark-php/mark`
 
 # Usage
 start.php
