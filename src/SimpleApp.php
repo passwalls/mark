@@ -69,7 +69,6 @@ class SimpleApp extends Worker
                }
            }
         });
-        $this->count = shell_exec('nproc') ? shell_exec('nproc') - 4 : 12;
         \Workerman\Worker::runAll();
     }
 
