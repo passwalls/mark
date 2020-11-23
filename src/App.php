@@ -52,10 +52,60 @@ class App extends Worker
      * @param $path
      * @param $callback
      */
+    public function put($path, $callback)
+    {
+        $this->routeInfo['PUT'][] = [$path, $callback];
+    }
+
+    /**
+     * @param $path
+     * @param $callback
+     */
+    public function patch($path, $callback)
+    {
+        $this->routeInfo['PATCH'][] = [$path, $callback];
+    }
+
+    /**
+     * @param $path
+     * @param $callback
+     */
+    public function delete($path, $callback)
+    {
+        $this->routeInfo['DELETE'][] = [$path, $callback];
+    }
+
+    /**
+     * @param $path
+     * @param $callback
+     */
+    public function head($path, $callback)
+    {
+        $this->routeInfo['HEAD'][] = [$path, $callback];
+    }
+
+    /**
+     * @param $path
+     * @param $callback
+     */
+    public function options($path, $callback)
+    {
+        $this->routeInfo['OPTIONS'][] = [$path, $callback];
+    }
+
+    /**
+     * @param $path
+     * @param $callback
+     */
     public function any($path, $callback)
     {
         $this->routeInfo['GET'][] = [$path, $callback];
         $this->routeInfo['POST'][] = [$path, $callback];
+        $this->routeInfo['PUT'][] = [$path, $callback];
+        $this->routeInfo['DELETE'][] = [$path, $callback];
+        $this->routeInfo['PATCH'][] = [$path, $callback];
+        $this->routeInfo['HEAD'][] = [$path, $callback];
+        $this->routeInfo['OPTIONS'][] = [$path, $callback];
     }
 
     /**
