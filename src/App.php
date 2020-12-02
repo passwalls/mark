@@ -20,6 +20,11 @@ class App extends Worker
     protected $dispatcher = null;
 
     /**
+     * @var string
+     */
+    protected $pathPrefix = '';
+
+    /**
      * App constructor.
      * @param string $socket_name
      * @param array $context_option
@@ -36,7 +41,7 @@ class App extends Worker
      */
     public function get($path, $callback)
     {
-        $this->routeInfo['GET'][] = [$path, $callback];
+        $this->addRoute('GET', $path, $callback);
     }
 
     /**
@@ -45,7 +50,7 @@ class App extends Worker
      */
     public function post($path, $callback)
     {
-        $this->routeInfo['POST'][] = [$path, $callback];
+        $this->addRoute('POST', $path, $callback);
     }
 
     /**
@@ -54,7 +59,7 @@ class App extends Worker
      */
     public function put($path, $callback)
     {
-        $this->routeInfo['PUT'][] = [$path, $callback];
+        $this->addRoute('PUT', $path, $callback);
     }
 
     /**
@@ -63,7 +68,7 @@ class App extends Worker
      */
     public function patch($path, $callback)
     {
-        $this->routeInfo['PATCH'][] = [$path, $callback];
+        $this->addRoute('PATCH', $path, $callback);
     }
 
     /**
@@ -72,7 +77,7 @@ class App extends Worker
      */
     public function delete($path, $callback)
     {
-        $this->routeInfo['DELETE'][] = [$path, $callback];
+        $this->addRoute('DELETE', $path, $callback);
     }
 
     /**
@@ -81,7 +86,7 @@ class App extends Worker
      */
     public function head($path, $callback)
     {
-        $this->routeInfo['HEAD'][] = [$path, $callback];
+        $this->addRoute('HEAD', $path, $callback);
     }
 
     /**
@@ -90,7 +95,7 @@ class App extends Worker
      */
     public function options($path, $callback)
     {
-        $this->routeInfo['OPTIONS'][] = [$path, $callback];
+        $this->addRoute('OPTIONS', $path, $callback);
     }
 
     /**
@@ -99,13 +104,31 @@ class App extends Worker
      */
     public function any($path, $callback)
     {
-        $this->routeInfo['GET'][] = [$path, $callback];
-        $this->routeInfo['POST'][] = [$path, $callback];
-        $this->routeInfo['PUT'][] = [$path, $callback];
-        $this->routeInfo['DELETE'][] = [$path, $callback];
-        $this->routeInfo['PATCH'][] = [$path, $callback];
-        $this->routeInfo['HEAD'][] = [$path, $callback];
-        $this->routeInfo['OPTIONS'][] = [$path, $callback];
+        $this->addRoute(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'], $path, $callback);
+    }
+
+    /**
+     * @param $path
+     * @param $callback
+     */
+    public function group($path, $callback)
+    {
+        $this->pathPrefix = $path;
+        $callback($this);
+        $this->pathPrefix = '';
+    }
+
+    /**
+     * @param $method
+     * @param $path
+     * @param $callback
+     */
+    public function addRoute($method, $path, $callback)
+    {
+        $methods = (array)$method;
+        foreach ($methods as $method) {
+            $this->routeInfo[$method][] = [$this->pathPrefix . $path, $callback];
+        }
     }
 
     /**
@@ -114,11 +137,11 @@ class App extends Worker
     public function start()
     {
         $this->dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r) {
-           foreach ($this->routeInfo as $method => $callbacks) {
-               foreach ($callbacks as $info) {
-                   $r->addRoute($method, $info[0], $info[1]);
-               }
-           }
+            foreach ($this->routeInfo as $method => $callbacks) {
+                foreach ($callbacks as $info) {
+                    $r->addRoute($method, $info[0], $info[1]);
+                }
+            }
         });
 
         \Workerman\Worker::runAll();
