@@ -179,7 +179,6 @@ class App extends Worker
             }
         } catch (\Throwable $e) {
             $connection->send(new Response(500, [], (string)$e));
-            echo $e;
         }
     }
 
