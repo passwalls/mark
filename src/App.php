@@ -3,8 +3,9 @@
 namespace Mark;
 
 use Workerman\Worker;
-use Workerman\Protocols\Http\Response;
 use Workerman\Connection\TcpConnection;
+use Workerman\Protocols\Http\Request;
+use Workerman\Protocols\Http\Response;
 use FastRoute\Dispatcher;
 
 class App extends Worker
@@ -15,7 +16,7 @@ class App extends Worker
     protected $routeInfo = [];
 
     /**
-     * @var null
+     * @var Dispatcher
      */
     protected $dispatcher = null;
 
@@ -149,20 +150,23 @@ class App extends Worker
 
     /**
      * @param TcpConnection $connection
-     * @param string $request
+     * @param Request $request
      * @return null
      */
     public function onMessage($connection, $request)
     {
         static $callbacks = [];
         try {
-            $callback = $callbacks[$request->path()] ?? null;
+            $path = $request->path();
+            $method = $request->method();
+            $key = $method . $path;
+            $callback = $callbacks[$key] ?? null;
             if ($callback) {
                 $connection->send($callback($request));
                 return null;
             }
 
-            $ret = $this->dispatcher->dispatch($request->method(), $request->path());
+            $ret = $this->dispatcher->dispatch($method, $path);
             if ($ret[0] === Dispatcher::FOUND) {
                 $callback = $ret[1];
                 if (!empty($ret[2])) {
@@ -171,7 +175,7 @@ class App extends Worker
                         return $callback($request, ... $args);
                     };
                 }
-                $callbacks[$request->path()] = $callback;
+                $callbacks[$key] = $callback;
                 $connection->send($callback($request));
                 return true;
             } else {
@@ -181,5 +185,4 @@ class App extends Worker
             $connection->send(new Response(500, [], (string)$e));
         }
     }
-
 }
