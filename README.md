@@ -1,7 +1,5 @@
 Mark is a high performance API micro framework based on [FastRoute](https://github.com/nikic/FastRoute) and [workerman](https://github.com/walkor/workerman) helps you quickly write APIs with php. It is so simple that the [core codes](https://github.com/passwalls/mark/blob/master/src/App.php) is only about 200 lines.
 
-Probably the fastest PHP API framework in the world. See [the-benchmarker](https://github.com/the-benchmarker/web-frameworks#results).
-
 # Install
 It's recommended that you use Composer to install Mark.
 
