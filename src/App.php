@@ -34,9 +34,6 @@ class App extends Worker
     {
         parent::__construct($socket_name, $context_option);
         $this->onMessage = [$this, 'onMessage'];
-        if (\DIRECTORY_SEPARATOR === '/' && \version_compare(php_uname('r'), '3.9', 'ge') && \strtolower(\php_uname('s')) !== 'darwin' && strpos($socket_name,'unix') !== 0) {
-            $this->reusePort = true;
-        }
     }
 
     /**
