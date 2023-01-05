@@ -9,6 +9,7 @@ It's recommended that you use Composer to install Mark.
 start.php
 ```php
 <?php
+
 use Mark\App;
 
 require 'vendor/autoload.php';
@@ -17,16 +18,16 @@ $api = new App('http://0.0.0.0:3000');
 
 $api->count = 4; // process count
 
-$api->any('/', function ($requst) {
+$api->any('/', function ($request) {
     return 'Hello world';
 });
 
-$api->get('/hello/{name}', function ($requst, $name) {
+$api->get('/hello/{name}', function ($request, $name) {
     return "Hello $name";
 });
 
-$api->post('/user/create', function ($requst) {
-    return json_encode(['code'=>0 ,'message' => 'ok']);
+$api->post('/user/create', function ($request) {
+    return json_encode(['code' => 0, 'message' => 'ok']);
 });
 
 $api->start();
