@@ -39,90 +39,128 @@ class App extends Worker
     /**
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function get($path, $callback)
     {
         $this->addRoute('GET', $path, $callback);
+
+        return $this;
     }
 
     /**
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function post($path, $callback)
     {
         $this->addRoute('POST', $path, $callback);
+
+        return $this;
     }
 
     /**
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function put($path, $callback)
     {
         $this->addRoute('PUT', $path, $callback);
+
+        return $this;
     }
 
     /**
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function patch($path, $callback)
     {
         $this->addRoute('PATCH', $path, $callback);
+
+        return $this;
     }
 
     /**
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function delete($path, $callback)
     {
         $this->addRoute('DELETE', $path, $callback);
+
+        return $this;
     }
 
     /**
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function head($path, $callback)
     {
         $this->addRoute('HEAD', $path, $callback);
+
+        return $this;
     }
 
     /**
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function options($path, $callback)
     {
         $this->addRoute('OPTIONS', $path, $callback);
+
+        return $this;
     }
 
     /**
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function any($path, $callback)
     {
         $this->addRoute(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'], $path, $callback);
+
+        return $this;
     }
 
     /**
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function group($path, $callback)
     {
         $this->pathPrefix = $path;
         $callback($this);
         $this->pathPrefix = '';
+
+        return $this;
     }
 
     /**
      * @param $method
      * @param $path
      * @param $callback
+     *
+     * @return $this
      */
     public function addRoute($method, $path, $callback)
     {
@@ -130,6 +168,8 @@ class App extends Worker
         foreach ($methods as $method) {
             $this->routeInfo[$method][] = [$this->pathPrefix . $path, $callback];
         }
+
+        return $this;
     }
 
     /**
