@@ -114,9 +114,10 @@ class App extends Worker
      */
     public function group($path, $callback)
     {
-        $this->pathPrefix = $path;
+        $oldPrefix = $this->pathPrefix;
+        $this->pathPrefix .= $path;
         $callback($this);
-        $this->pathPrefix = '';
+        $this->pathPrefix = $oldPrefix;
     }
 
     /**
