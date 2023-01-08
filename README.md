@@ -8,6 +8,7 @@ It's recommended that you use Composer to install Mark.
 # Usage
 start.php
 ```php
+
 <?php
 use Mark\App;
 
@@ -17,16 +18,16 @@ $api = new App('http://0.0.0.0:3000');
 
 $api->count = 4; // process count
 
-$api->any('/', function ($requst) {
-    return 'Hello world';
+$api->any('/', function ($request, $response) {
+    return $response->withBody('Hello world');
 });
 
-$api->get('/hello/{name}', function ($requst, $name) {
-    return "Hello $name";
+$api->get('/hello/{name}', function ($request, $response, $name) {
+    return $response->withBody("Hello $name");
 });
 
-$api->post('/user/create', function ($requst) {
-    return json_encode(['code'=>0 ,'message' => 'ok']);
+$api->post('/user/create', function ($request, $response) {
+    return $response->withBody(json_encode(['code' => 0, 'message' => 'ok']));
 });
 
 $api->start();

@@ -156,13 +156,14 @@ class App extends Worker
     public function onMessage($connection, $request)
     {
         static $callbacks = [];
+        $response = new Response();
         try {
             $path = $request->path();
             $method = $request->method();
             $key = $method . $path;
             $callback = $callbacks[$key] ?? null;
             if ($callback) {
-                $connection->send($callback($request));
+                $connection->send($callback($request, $response));
                 return null;
             }
 
@@ -171,18 +172,18 @@ class App extends Worker
                 $callback = $ret[1];
                 if (!empty($ret[2])) {
                     $args = array_values($ret[2]);
-                    $callback = function ($request) use ($args, $callback) {
-                        return $callback($request, ... $args);
+                    $callback = function ($request, $response) use ($args, $callback) {
+                        return $callback($request, $response, ... $args);
                     };
                 }
                 $callbacks[$key] = $callback;
-                $connection->send($callback($request));
+                $connection->send($callback($request, $response));
                 return true;
             } else {
-                $connection->send(new Response(404, [], '<h1>404 Not Found</h1>'));
+                $connection->send($response->withStatus(404)->withBody('<h1>404 Not Found</h1>'));
             }
         } catch (\Throwable $e) {
-            $connection->send(new Response(500, [], (string)$e));
+            $connection->send($response->withStatus(500)->withBody((string)$e));
         }
     }
 }
