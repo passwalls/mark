@@ -157,7 +157,7 @@ class App extends Worker
     {
         static $callbacks = [];
         try {
-            $path = $request->path();
+            $path = urldecode($request->path());
             $method = $request->method();
             $key = $method . $path;
             $callback = $callbacks[$key] ?? null;
