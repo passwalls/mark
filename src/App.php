@@ -8,6 +8,15 @@ use Workerman\Protocols\Http\Request;
 use Workerman\Protocols\Http\Response;
 use FastRoute\Dispatcher;
 
+/**
+ * @method void get(string $path, callable $callback)
+ * @method void post(string $path, callable $callback)
+ * @method void put(string $path, callable $callback)
+ * @method void delete(string $path, callable $callback)
+ * @method void patch(string $path, callable $callback)
+ * @method void head(string $path, callable $callback)
+ * @method void options(string $path, callable $callback)
+ */
 class App extends Worker
 {
     /**
@@ -26,6 +35,11 @@ class App extends Worker
     protected $pathPrefix = '';
 
     /**
+     * @var string[]
+     */
+    protected $verbs = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'];
+
+    /**
      * App constructor.
      * @param string $socket_name
      * @param array $context_option
@@ -40,72 +54,9 @@ class App extends Worker
      * @param $path
      * @param $callback
      */
-    public function get($path, $callback)
-    {
-        $this->addRoute('GET', $path, $callback);
-    }
-
-    /**
-     * @param $path
-     * @param $callback
-     */
-    public function post($path, $callback)
-    {
-        $this->addRoute('POST', $path, $callback);
-    }
-
-    /**
-     * @param $path
-     * @param $callback
-     */
-    public function put($path, $callback)
-    {
-        $this->addRoute('PUT', $path, $callback);
-    }
-
-    /**
-     * @param $path
-     * @param $callback
-     */
-    public function patch($path, $callback)
-    {
-        $this->addRoute('PATCH', $path, $callback);
-    }
-
-    /**
-     * @param $path
-     * @param $callback
-     */
-    public function delete($path, $callback)
-    {
-        $this->addRoute('DELETE', $path, $callback);
-    }
-
-    /**
-     * @param $path
-     * @param $callback
-     */
-    public function head($path, $callback)
-    {
-        $this->addRoute('HEAD', $path, $callback);
-    }
-
-    /**
-     * @param $path
-     * @param $callback
-     */
-    public function options($path, $callback)
-    {
-        $this->addRoute('OPTIONS', $path, $callback);
-    }
-
-    /**
-     * @param $path
-     * @param $callback
-     */
     public function any($path, $callback)
     {
-        $this->addRoute(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'], $path, $callback);
+        $this->addRoute($this->verbs, $path, $callback);
     }
 
     /**
@@ -126,9 +77,8 @@ class App extends Worker
      */
     public function addRoute($method, $path, $callback)
     {
-        $methods = (array)$method;
-        foreach ($methods as $method) {
-            $this->routeInfo[$method][] = [$this->pathPrefix . $path, $callback];
+        foreach ((array)$method as $verb) {
+            $this->routeInfo[$verb][] = [$this->pathPrefix . $path, $callback];
         }
     }
 
@@ -183,6 +133,19 @@ class App extends Worker
             }
         } catch (\Throwable $e) {
             $connection->send(new Response(500, [], (string)$e));
+        }
+    }
+
+    /**
+     * @param string $method
+     * @param array $args
+     * @return void
+     */
+    public function __call($method, $args)
+    {
+        $verb = \strtr($method, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+        if (in_array($verb, $this->verbs, true)) {
+            $this->addRoute($verb, ...$args);
         }
     }
 }
